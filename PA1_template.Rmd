@@ -88,6 +88,9 @@ grid.arrange(g1, nrow=1, ncol=1)
 ```{r , echo=TRUE}
 #mean
 mean(totStep$steps)
+```
+```{r , echo=TRUE}
+
 #median
 median(totStep$steps)
 ```
@@ -115,8 +118,12 @@ print( paste("The 5-minute interval that, on average, contains the maximum numbe
    
 ``` {r, echo=TRUE}
 head(arrange(aggregate(steps ~ date, data=activity, function(x) {sum(is.na(x))}, na.action = na.pass),desc(steps)),10)
+
+```
+``` {r, echo=TRUE}
 head(arrange(aggregate(steps ~ interval, data=activity, function(x) {sum(is.na(x))}, na.action = na.pass),desc(interval)),10)
 ```
+
 3. We can see that there are eight days with 288 missing values which means they have no values at all as the maximum interval per day is 288
   There are 8 misisng values for every sinbgle interval which is obviously caused by the 8 days with no values
   In this case it was easy to fin where the missing data occured but it might be more tricky with a bigger dataset
@@ -169,7 +176,6 @@ We can see now that there is no missing values remaining in our dataset.
 ```{r, echo=TRUE} 
 totStepFull<-aggregate(steps ~ date, completedData, sum)  
   #aggregate(date ~ steps, activity, sum,na.action = na.omit)
-
 g2<-ggplot(data=totStepFull, aes(steps)) + 
 geom_histogram(col="black",binwidth = 2000, aes(fill=..count..))+
   labs(title="Total number of steps taken each day with imputed values")+
@@ -177,6 +183,21 @@ geom_histogram(col="black",binwidth = 2000, aes(fill=..count..))+
   theme(plot.title = element_text(hjust = 0.5))
 grid.arrange(g1,g2, nrow=2, ncol=1)
 ```
+There isn't a big difference between the plot with missing values and the one with the imputed values.
+The only thing I can say is that the distribution look a litle bit skewed to the left.
+Remember the chart with the missing values has almost the same mean =10766.19 and median = 10765.
+As the data are left skewed the median will be higher than the mean.
+```{r, echo=TRUE} 
+#mean
+mean(totStepFull$steps)
+```
+
+```{r, echo=TRUE} 
+#median
+median(totStepFull$steps)
+```
+
+So the new dataframe with the imputed value still has the same median but has a lower mean so as stated before the new dataframe is a litle bit skewed to the left.
 
 ### Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
 ```{r, echo=TRUE} 
